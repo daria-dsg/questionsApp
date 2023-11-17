@@ -1,3 +1,5 @@
+require_relative 'questions_db'
+
 class User
 	def self.find_by_id(id)
 		# user stores an array of hash with row as a key and values
