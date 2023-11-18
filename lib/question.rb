@@ -19,7 +19,7 @@ class Question
 
 	def self.find_by_author_id(author_id)
 		# var stores an array of hash with row as a key and values
-		author = QuestionsDatabase.instance.execute(<<-SQL, author_id)
+		questions = QuestionsDatabase.instance.execute(<<-SQL, author_id)
 				SELECT 
 					*
 				FROM
@@ -28,7 +28,7 @@ class Question
 				  user_id = ?
 			SQL
 			
-		Question.new(author.first)
+		 questions.map {|options| Question.new(options)}
 	end
 
     # options is a hash of attributes
