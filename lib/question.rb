@@ -1,8 +1,10 @@
 require_relative 'questions_db'
 
 class Question
+    attr_accessor :id, :title, :body, :user_id
+
 	def self.find_by_id(id)
-		# question stores an array of hash with row as a key and values
+		# var stores an array of hash with row as a key and values
 		question = QuestionsDatabase.instance.execute(<<-SQL, id)
 			SELECT 
 				*
@@ -11,11 +13,25 @@ class Question
 			WHERE 
 			  id = ?
 		SQL
-
+        
 		Question.new(question.first)
 	end
 
-    # init var by accesing hash with key
+	def self.find_by_author_id(author_id)
+		# var stores an array of hash with row as a key and values
+		author = QuestionsDatabase.instance.execute(<<-SQL, author_id)
+				SELECT 
+					*
+				FROM
+					questions
+				WHERE 
+				  user_id = ?
+			SQL
+			
+		Question.new(author.first)
+	end
+
+    # options is a hash of attributes
 	def initialize(options)
 		@id = options['id']
 		@title = options['title']
