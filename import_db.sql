@@ -60,6 +60,9 @@ VALUES ('Catalina question', 'What''s something you learned in the last week?', 
 INSERT INTO questions(title, body, user_id)
 VALUES ('Ruby question', 'When people come to you for help, what do they usually want help with?', 2);
 
+INSERT INTO questions(title, body, user_id)
+VALUES ('Second question of Catalina', 'What is something you can never seem to finish?', 1);
+
 
 INSERT INTO questions_follows(question_id, user_id)
 VALUES (1, 2);
