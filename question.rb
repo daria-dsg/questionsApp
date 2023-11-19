@@ -1,5 +1,6 @@
 require_relative 'questions_db'
 require_relative 'user'
+require_relative 'reply'
 
 class Question
 	attr_accessor :id, :title, :body, :user_id
