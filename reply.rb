@@ -53,4 +53,26 @@ class Reply
     @question_id = options['question_id']
 		@body = options['body']
 	end
+
+  def save
+		is_saved = self.id == nil ? false : true
+
+		unless is_saved
+			QuestionsDatabase.instance.execute(<<-SQL, self.user_id, self.question_id, self.body)
+				INSERT INTO replies(user_id, question_id, body)
+				VALUES (?, ?, ?)
+			SQL
+
+    	self.id = QuestionsDatabase.instance.last_insert_row_id
+		else
+			QuestionsDatabase.instance.execute(<<-SQL, self.user_id, self.question_id, self.body, self.id)
+				UPDATE
+				 replies
+				SET
+					user_id = ?, question_id = ?, body = ?
+				WHERE
+				 replies.id = ?
+			SQL
+		end
+	end
 end
