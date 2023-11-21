@@ -28,6 +28,17 @@ class QuestionFollow
 
     users.map {|options| User.new(options)}
   end
+
+  def self.followed_questions_for_user_id(user_id)
+    questions = QuestionsDatabase.instance.execute(<<-SQL, user_id)
+      SELECT questions.id, questions.title, questions.body, questions.user_id FROM questions
+      INNER JOIN questions_follows
+      ON questions.id = questions_follows.question_id
+      WHERE questions_follows.user_id = ?
+    SQL
+
+    questions.map {|options| Question.new(options)}
+  end
     
   # options is a hash of attributes
 	def initialize(options)
