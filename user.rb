@@ -1,6 +1,7 @@
 require_relative 'questions_db'
 require_relative 'question'
 require_relative 'reply'
+require_relative 'question_follow'
 
 class User
   attr_accessor :id, :fname, :lname
@@ -70,5 +71,9 @@ class User
 
   def authored_replies
     Reply.find_by_author_id(self.id)
+  end
+
+  def followed_questions
+    QuestionFollow.followed_questions_for_user_id(self.id)
   end
 end
