@@ -57,6 +57,10 @@ class Question
     questions.map {|options| Question.new(options)}
   end
 
+  def self.most_liked(n)
+    QuestionLike.most_liked_questions(n)
+  end
+
   # options is a hash of attributes
   def initialize(options)
     @id = options['id']
