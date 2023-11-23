@@ -2,6 +2,8 @@ require_relative 'questions_db'
 require_relative 'user'
 require_relative 'reply'
 require_relative 'question_follow'
+require_relative 'question'
+require_relative 'question_like'
 
 class Question
   attr_accessor :id, :title, :body, :user_id
@@ -16,7 +18,7 @@ class Question
       WHERE 
         id = ?
     SQL
-        
+      
     Question.new(question.first)
   end
 
@@ -32,6 +34,27 @@ class Question
       SQL
       
      questions.map {|options| Question.new(options)}
+  end
+
+  def self.most_followed_questions(n)
+    questions = QuestionsDatabase.instance.execute(<<-SQL, n)
+      SELECT
+        questions.*
+      FROM
+        questions
+      JOIN
+        questions_follows
+      ON
+        questions.id = questions_follows.question_id
+      GROUP BY
+        questions.id
+      ORDER BY
+        COUNT(*) DESC
+      LIMIT
+        ?
+    SQL
+
+    questions.map {|options| Question.new(options)}
   end
 
   # options is a hash of attributes
@@ -74,5 +97,9 @@ class Question
 
   def followers
     QuestionFollow.followers_for_question_id(self.id)
+  end
+
+  def likers
+    QuestionLike.likers_for_question_id(self.id) 
   end
 end
