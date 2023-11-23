@@ -102,4 +102,8 @@ class Question
   def likers
     QuestionLike.likers_for_question_id(self.id) 
   end
+
+  def num_likes
+    QuestionLike.num_likes_for_question_id(self.id)
+  end
 end
