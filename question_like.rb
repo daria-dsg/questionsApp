@@ -1,5 +1,6 @@
 require_relative 'questions_db'
 require_relative 'user'
+require_relative 'question'
 
 class QuestionLike
   attr_accessor :id, :question_id, :user_id
@@ -46,6 +47,23 @@ class QuestionLike
       GROUP BY
         questions_likes.question_id
     SQL
+  end
+
+  def self.liked_questions_for_user_id(user_id)
+    questions_data = QuestionsDatabase.instance.execute(<<-SQL, user_id: user_id)
+      SELECT
+        questions.*
+      FROM
+        questions
+      JOIN
+        questions_likes
+      ON
+        questions.id = questions_likes.question_id
+      WHERE
+        questions_likes.user_id = :user_id
+    SQL
+
+    questions_data.map {|data| Question.new(data)}
   end
 
   # options is a hash of attributes
