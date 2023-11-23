@@ -35,6 +35,19 @@ class QuestionLike
     users_data.map {|data| User.new(data)}
   end
 
+  def self.num_likes_for_question_id(question_id)
+    QuestionsDatabase.instance.get_first_value(<<-SQL, question_id: question_id)
+      SELECT
+        COUNT(questions_likes.user_id) AS count
+      FROM
+        questions_likes
+      WHERE 
+        questions_likes.question_id = :question_id
+      GROUP BY
+        questions_likes.question_id
+    SQL
+  end
+
   # options is a hash of attributes
   def initialize(options)
     @id = options['id']
