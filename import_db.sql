@@ -15,7 +15,7 @@ CREATE TABLE questions (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TABLE questions_follows (
+CREATE TABLE question_follows (
     id INTEGER PRIMARY KEY,
     question_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
@@ -64,10 +64,10 @@ INSERT INTO questions(title, body, user_id)
 VALUES ('Second question of Catalina', 'What is something you can never seem to finish?', 1);
 
 
-INSERT INTO questions_follows(question_id, user_id)
+INSERT INTO question_follows(question_id, user_id)
 VALUES (1, 2);
 
-INSERT INTO questions_follows(question_id, user_id)
+INSERT INTO question_follows(question_id, user_id)
 VALUES (2, 1);
 
 
