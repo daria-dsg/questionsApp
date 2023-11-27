@@ -11,7 +11,7 @@ class QuestionLike
       SELECT 
         *
       FROM
-        questions_likes
+        question_likes
       WHERE 
         id = ?
     SQL
@@ -26,11 +26,11 @@ class QuestionLike
       FROM
         users
       JOIN
-        questions_likes
+        question_likes
       ON
-        users.id = questions_likes.user_id
+        users.id = question_likes.user_id
       WHERE
-        questions_likes.question_id = :question_id
+        question_likes.question_id = :question_id
     SQL
 
     users_data.map {|data| User.new(data)}
@@ -39,13 +39,13 @@ class QuestionLike
   def self.num_likes_for_question_id(question_id)
     QuestionsDatabase.instance.get_first_value(<<-SQL, question_id: question_id)
       SELECT
-        COUNT(questions_likes.user_id) AS count
+        COUNT(question_likes.user_id) AS count
       FROM
-        questions_likes
+        question_likes
       WHERE 
-        questions_likes.question_id = :question_id
+        question_likes.question_id = :question_id
       GROUP BY
-        questions_likes.question_id
+        question_likes.question_id
     SQL
   end
 
@@ -56,11 +56,11 @@ class QuestionLike
       FROM
         questions
       JOIN
-        questions_likes
+        question_likes
       ON
-        questions.id = questions_likes.question_id
+        questions.id = question_likes.question_id
       WHERE
-        questions_likes.user_id = :user_id
+        question_likes.user_id = :user_id
     SQL
 
     questions_data.map {|data| Question.new(data)}
@@ -73,11 +73,11 @@ class QuestionLike
       FROM
         questions
       JOIN
-        questions_likes
+        question_likes
       ON
-        questions.id = questions_likes.question_id
+        questions.id = question_likes.question_id
       GROUP BY
-        questions_likes.question_id
+        question_likes.question_id
       ORDER BY
         COUNT(*) DESC
       LIMIT

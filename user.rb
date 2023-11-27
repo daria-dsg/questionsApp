@@ -55,14 +55,14 @@ class User < ModelBase
   def average_karma
     QuestionsDatabase.instance.get_first_value(<<-SQL, self.id)
       SELECT
-        CAST(COUNT(questions_likes.id) AS FLOAT) /
+        CAST(COUNT(question_likes.id) AS FLOAT) /
           COUNT(DISTINCT(questions.id)) AS avg_karma
       FROM
         questions
       LEFT OUTER JOIN
-        questions_likes
+        question_likes
       ON
-        questions.id = questions_likes.question_id
+        questions.id = question_likes.question_id
       WHERE
         questions.user_id = ? 
     SQL
