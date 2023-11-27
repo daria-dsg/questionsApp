@@ -20,4 +20,16 @@ class ModelBase
 
     data.nil? ? nil : self.new(data.first)
   end
+
+  def self.all
+    # var stores an array of hash with row as a key and values
+    data = QuestionsDatabase.instance.execute(<<-SQL)
+      SELECT 
+        *
+      FROM
+        #{table}
+    SQL
+
+    data.map {|options| self.new(options)}
+  end
 end
