@@ -4,23 +4,10 @@ require_relative 'reply'
 require_relative 'question_follow'
 require_relative 'question'
 require_relative 'question_like'
+require_relative 'model_base'
 
-class Question
+class Question < ModelBase
   attr_accessor :id, :title, :body, :user_id
-
-  def self.find_by_id(id)
-    # var stores an array of hash with row as a key and values
-    question = QuestionsDatabase.instance.execute(<<-SQL, id)
-      SELECT 
-        *
-      FROM
-        questions
-      WHERE 
-        id = ?
-    SQL
-      
-    Question.new(question.first)
-  end
 
   def self.find_by_author_id(author_id)
     # var stores an array of hash with row as a key and values

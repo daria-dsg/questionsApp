@@ -1,23 +1,10 @@
 require_relative 'questions_db'
 require_relative 'user'
 require_relative 'question'
+require_relative 'model_base'
 
-class QuestionLike
+class QuestionLike < ModelBase
   attr_accessor :id, :question_id, :user_id
-
-  def self.find_by_id(id)
-    # var stores an array of hash with row as a key and values
-    question_like = QuestionsDatabase.instance.execute(<<-SQL, id)
-      SELECT 
-        *
-      FROM
-        question_likes
-      WHERE 
-        id = ?
-    SQL
-        
-    QuestionLike.new(question_like.first)
-  end
 
   def self.likers_for_question_id(question_id)
     users_data = QuestionsDatabase.instance.execute(<<-SQL, question_id: question_id)

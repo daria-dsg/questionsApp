@@ -1,23 +1,9 @@
 require_relative 'questions_db'
 require_relative 'user'
+require_relative 'model_base'
 
-class Reply
+class Reply < ModelBase
   attr_accessor :id, :user_id, :question_id, :parent_id, :body
-
-  def self.find_by_id(id)
-    # var stores an array of hash with row as a key and values
-    reply = QuestionsDatabase.instance.execute(<<-SQL, id)
-      SELECT 
-        *
-      FROM
-        replies
-      WHERE 
-        id = ?
-    SQL
-    
-    raise "reply with id #{id} is not in database" if reply.empty?
-    Reply.new(reply.first)
-  end
 
   def self.find_by_author_id(author_id)
     replies = QuestionsDatabase.instance.execute(<<-SQL, author_id)
