@@ -3,24 +3,10 @@ require_relative 'question'
 require_relative 'reply'
 require_relative 'question_follow'
 require_relative 'question_like'
+require_relative 'model_base'
 
-class User
+class User < ModelBase
   attr_accessor :id, :fname, :lname
-
-  def self.find_by_id(id)
-    # var stores an array of hash with row as a key and values
-    user = QuestionsDatabase.instance.execute(<<-SQL, id)
-      SELECT 
-        *
-      FROM
-        users
-      WHERE 
-        id = ?
-    SQL
-
-    raise "user with id #{id} is not in database" if user.empty?
-    User.new(user.first)
-  end
 
   def self.find_by_name(fname, lname)
     # var stores an array of hash with row as a key and values
