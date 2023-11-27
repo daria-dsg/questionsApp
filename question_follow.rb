@@ -10,7 +10,7 @@ class QuestionFollow
       SELECT 
         *
       FROM
-        questions_follows
+        question_follows
       WHERE 
         id = ?
     SQL
@@ -21,9 +21,9 @@ class QuestionFollow
   def self.followers_for_question_id(question_id)
     users = QuestionsDatabase.instance.execute(<<-SQL, question_id)
       SELECT users.id, users.fname, users.lname FROM users
-      INNER JOIN questions_follows
-      ON users.id = questions_follows.user_id
-      WHERE questions_follows.question_id = ?
+      INNER JOIN question_follows
+      ON users.id = question_follows.user_id
+      WHERE question_follows.question_id = ?
     SQL
 
     users.map {|options| User.new(options)}
@@ -32,9 +32,9 @@ class QuestionFollow
   def self.followed_questions_for_user_id(user_id)
     questions = QuestionsDatabase.instance.execute(<<-SQL, user_id)
       SELECT questions.id, questions.title, questions.body, questions.user_id FROM questions
-      INNER JOIN questions_follows
-      ON questions.id = questions_follows.question_id
-      WHERE questions_follows.user_id = ?
+      INNER JOIN question_follows
+      ON questions.id = question_follows.question_id
+      WHERE question_follows.user_id = ?
     SQL
 
     questions.map {|options| Question.new(options)}

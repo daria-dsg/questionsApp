@@ -43,9 +43,9 @@ class Question
       FROM
         questions
       JOIN
-        questions_follows
+        question_follows
       ON
-        questions.id = questions_follows.question_id
+        questions.id = question_follows.question_id
       GROUP BY
         questions.id
       ORDER BY
