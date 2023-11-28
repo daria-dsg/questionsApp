@@ -29,29 +29,7 @@ class User < ModelBase
     @fname = options['fname']
     @lname = options['lname']
   end
-
-  def save
-    is_saved = self.id == nil ? false : true
-
-    unless is_saved
-      QuestionsDatabase.instance.execute(<<-SQL, self.fname, self.lname)
-        INSERT INTO users(fname, lname)
-        VALUES (?, ?)
-      SQL
-
-      self.id = QuestionsDatabase.instance.last_insert_row_id
-    else
-      QuestionsDatabase.instance.execute(<<-SQL, self.fname, self.lname, self.id)
-        UPDATE
-          users
-        SET
-          fname = ?, lname = ?
-        WHERE
-          users.id = ?
-      SQL
-    end
-  end
-
+  
   def average_karma
     QuestionsDatabase.instance.get_first_value(<<-SQL, self.id)
       SELECT
