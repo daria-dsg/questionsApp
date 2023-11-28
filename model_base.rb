@@ -33,6 +33,22 @@ class ModelBase
     data.map {|options| self.new(options)}
   end
 
+  def self.where(params)
+    values = params.values
+    keys = params.keys.map {|name| name.to_s + "= ?"}.join(" , ")
+
+    data = QuestionsDatabase.instance.execute(<<-SQL, *values)
+      SELECT
+        *
+      FROM
+        #{table}
+      WHERE
+        #{keys}
+    SQL
+
+    data.map {|options| self.new(options)}
+  end
+
   def attrs
     Hash[
       instance_variables.map do
