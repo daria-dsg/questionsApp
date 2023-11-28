@@ -56,28 +56,6 @@ class Question < ModelBase
     @user_id = options['user_id']
   end
 
-  def save
-    is_saved = self.id == nil ? false : true
-
-    unless is_saved
-      QuestionsDatabase.instance.execute(<<-SQL, self.title, self.body, self.user_id)
-        INSERT INTO questions(title, body, user_id)
-        VALUES (?, ?, ?)
-      SQL
-
-      self.id = QuestionsDatabase.instance.last_insert_row_id
-    else
-      QuestionsDatabase.instance.execute(<<-SQL, self.title, self.body, self.user_id, self.id)
-        UPDATE
-         questions
-        SET
-          title = ?, body = ?, user_id = ?
-        WHERE
-         questions.id = ?
-      SQL
-    end
-  end
-
   def author
     User.find_by_id(self.user_id)
   end
