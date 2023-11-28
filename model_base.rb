@@ -65,26 +65,24 @@ class ModelBase
     self.id = QuestionsDatabase.instance.last_insert_row_id
   end
 
-  def save
-    is_saved = self.id == nil ? false : true
-    vars = self.instance_variables
+  def update
+    raise 'not in database' if id.nil?
 
-    unless is_saved
-      QuestionsDatabase.instance.execute(<<-SQL, *vars)
-        INSERT INTO users(fname, lname)
-        VALUES (?, ?)
-      SQL
+    # get array of instance variables values to pass to heredoc
+    instance_attrs = attrs
+    id = instance_attrs.delete("id")
+    values = instance_attrs.values
 
-      self.id = QuestionsDatabase.instance.last_insert_row_id
-    else
-      QuestionsDatabase.instance.execute(<<-SQL, self.fname, self.lname, self.id)
-        UPDATE
-          users
-        SET
-          fname = ?, lname = ?
-        WHERE
-          users.id = ?
+    # get a string with name of attribute and quesion mark
+    keys = instance_attrs.keys.map {|name| name.to_s + "= ?"}.join(" , ")
+
+    QuestionsDatabase.instance.execute(<<-SQL, *values, id)
+      UPDATE
+        #{self.class.table}
+      SET
+        #{keys}
+      WHERE
+        #{self.class.table}.id = ?
       SQL
-    end
   end
 end
