@@ -32,4 +32,35 @@ class ModelBase
 
     data.map {|options| self.new(options)}
   end
+
+  def attrs
+    Hash[
+      instance_variables.map do
+        |name| [name.to_s[1..-1], instance_variable_get(name)]
+      end
+    ]
+  end
+
+  def save
+    is_saved = self.id == nil ? false : true
+    vars = self.instance_variables
+
+    unless is_saved
+      QuestionsDatabase.instance.execute(<<-SQL, *vars)
+        INSERT INTO users(fname, lname)
+        VALUES (?, ?)
+      SQL
+
+      self.id = QuestionsDatabase.instance.last_insert_row_id
+    else
+      QuestionsDatabase.instance.execute(<<-SQL, self.fname, self.lname, self.id)
+        UPDATE
+          users
+        SET
+          fname = ?, lname = ?
+        WHERE
+          users.id = ?
+      SQL
+    end
+  end
 end
