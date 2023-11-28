@@ -49,6 +49,10 @@ class ModelBase
     data.map {|options| self.new(options)}
   end
 
+  def self.find_by(params)
+    self.where(params)
+  end
+
   def attrs
     Hash[
       instance_variables.map do
