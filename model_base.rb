@@ -41,6 +41,30 @@ class ModelBase
     ]
   end
 
+  def create
+    raise 'already saved' unless id.nil?
+    
+    # get array of instance variables values to pass to heredoc
+    instance_attrs = attrs
+    instance_attrs.delete("id")
+    values = instance_attrs.values
+
+    # get string of instance variables names
+    keys = instance_attrs.keys.join(", ")
+
+    # get string of question marks
+    question_marks = (["?"] * instance_attrs.count).join(", ")
+
+    QuestionsDatabase.instance.execute(<<-SQL, *values)
+      INSERT INTO
+        #{self.class.table}(#{keys})
+      VALUES
+        (#{question_marks})
+    SQL
+
+    self.id = QuestionsDatabase.instance.last_insert_row_id
+  end
+
   def save
     is_saved = self.id == nil ? false : true
     vars = self.instance_variables
